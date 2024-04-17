@@ -46,15 +46,15 @@ class Main {
 		var rand: Int = Math.floor(Math.random() * 5);
 		switch (rand) {
 			case 0:
-				logln('Hi, ${name}!');
+				logln('Hi, ${Colors.YELLOW}${name}${Colors.RESET}!');
 			case 1:
-				logln('Sup, ${name}!');
+				logln('Sup, ${Colors.YELLOW}${name}${Colors.RESET}!');
 			case 2:
-				logln('Yooooo, it\'s ${name}!');
+				logln('Yooooo, it\'s ${Colors.YELLOW}${name}${Colors.RESET}!');
 			case 3:
-				logln('${name} has joined the chat');
+				logln('${Colors.YELLOW}${name}${Colors.RESET} has joined the chat');
 			case 4:
-				logln('Meet the ${name.toUpperCase()}');
+				logln('Meet the ${Colors.YELLOW}${name.toUpperCase()}${Colors.RESET}');
 				if (name.toUpperCase() == "MEDIC") {
 					logln("Dun, dun, du-duuuun!");
 				}
@@ -83,10 +83,26 @@ class Main {
 			
 			case "stats":
 				var healthPerc: Float = (player.health / player.healthMax) * 100;
+				var healthColor: String = "";
+
+				if (healthPerc < 20) {
+					healthColor = Colors.RED;
+				} else if (healthPerc <= 50) {
+					healthColor = Colors.YELLOW;
+				} else if (healthPerc <= 100) {
+					healthColor = Colors.GREEN;
+				} else if (healthPerc > 100) {
+					healthColor = Colors.BLUE;
+				}
+
+				var str_healthRange = '${player.health}/${player.healthMax}';
+				var str_healthPerc = '${healthPerc}%';
+				var healthStr = 'Health: ' + healthColor + str_healthRange + Colors.RESET + " - " + healthColor + str_healthPerc + Colors.RESET;
+
 				logln("STATS");
 				logln("///////////////////");
-				logln('Name: ${player.name}');
-				logln('Health: ${player.health}/${player.healthMax} - ${healthPerc}%');
+				logln('Name: ${Colors.YELLOW}${player.name}${Colors.RESET}');
+				logln(healthStr);
 				logln('Inventory: ${player.invent.length}/${player.inventSize} items');
 				logln("///////////////////");
 			
