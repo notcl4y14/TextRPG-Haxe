@@ -24,7 +24,7 @@ class Entity {
 
 		if (!quiet) {
 			if (v < 0) {
-				Main.logln('${name} -${v}HP');
+				Main.logln('${name} ${v}HP');
 			} else {
 				Main.logln('${name} +${v}HP!');
 			}

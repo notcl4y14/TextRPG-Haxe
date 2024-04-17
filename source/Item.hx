@@ -2,9 +2,11 @@ package source;
 
 class Item {
 	public var name: String;
+	public var info: String;
 
-	public function new (name: String) {
+	public function new (name: String, info: String) {
 		this.name = name;
+		this.info = info;
 	}
 
 	// //////////////

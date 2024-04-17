@@ -1,5 +1,8 @@
 package source;
 
+import source.items.HurtPotion;
+import source.items.Apple;
+
 class Main {
 	static var prefix: String;
 	static var player: Entity;
@@ -31,10 +34,14 @@ class Main {
 		write('\n');
 
 		player = new Entity(name, 125, 125, 10);
-		player.pickup(new Item("Apple"), true);
-		player.pickup(new Item("Apple"), true);
-		player.pickup(new Item("Apple"), true);
-		player.pickup(new Item("Apple"), true);
+		player.pickup(new Apple(), true);
+		player.pickup(new Apple(), true);
+		player.pickup(new Apple(), true);
+		player.pickup(new Apple(), true);
+		player.pickup(new HurtPotion(), true);
+		player.pickup(new HurtPotion(), true);
+		player.pickup(new HurtPotion(), true);
+		player.pickup(new HurtPotion(), true);
 
 		var rand: Int = Math.floor(Math.random() * 5);
 		switch (rand) {
@@ -89,9 +96,31 @@ class Main {
 				for (i in 0...player.inventSize) {
 					var item = player.invent[i];
 					var name = item is Item ? item.name : "...";
-					logln('${i+1} - ${name}');
+					var str = !(item is Item) ? name : '${name}:\t${item.info}';
+					logln('${i+1} - ${str}');
 				}
 				logln("///////////////////");
+			
+			case "use":
+				logln("Type in the index of the item in your inventory");
+				logln("(q or c to cancel)");
+				log("");
+
+				var input = Sys.stdin().readLine();
+				var input_lc = input.toLowerCase();
+
+				if (input_lc != "q" && input_lc != "c") {
+					var input_n = Std.parseInt(input);
+
+					if (input_n < 1 || input_n > player.inventSize) {
+						logln('Index out of bounds! Only 1-${player.inventSize}');
+					} else if (player.invent[input_n - 1] == null) {
+						logln('The slot at index ${input_n} is empty');
+					} else {
+						player.invent[input_n - 1].use(player);
+						player.invent.splice(input_n - 1, 1);
+					}
+				}
 		}
 
 		loop();
