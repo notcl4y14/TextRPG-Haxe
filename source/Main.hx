@@ -1,7 +1,10 @@
 package source;
 
+import sys.io.File;
 import source.items.HurtPotion;
 import source.items.Apple;
+
+using StringTools;
 
 class Main {
 	static var prefix: String;
@@ -43,22 +46,45 @@ class Main {
 		player.pickup(new HurtPotion(), true);
 		player.pickup(new HurtPotion(), true);
 
-		var rand: Int = Math.floor(Math.random() * 5);
-		switch (rand) {
-			case 0:
-				logln('Hi, ${Colors.YELLOW}${name}${Colors.RESET}!');
-			case 1:
-				logln('Sup, ${Colors.YELLOW}${name}${Colors.RESET}!');
-			case 2:
-				logln('Yooooo, it\'s ${Colors.YELLOW}${name}${Colors.RESET}!');
-			case 3:
-				logln('${Colors.YELLOW}${name}${Colors.RESET} has joined the chat');
-			case 4:
-				logln('Meet the ${Colors.YELLOW}${name.toUpperCase()}${Colors.RESET}');
-				if (name.toUpperCase() == "MEDIC") {
-					logln("Dun, dun, du-duuuun!");
-				}
+		var messages = File.getContent("assets/welcomeMessages.txt");
+		var lines: Array<String> = [];
+		var line: String = "";
+
+		for (char in messages.split("")) {
+			line += char;
+
+			if (char == "\n") {
+				lines.push(line);
+				line = "";
+			}
 		}
+
+		lines.push(line);
+
+		var rand: Int = Math.floor(Math.random() * lines.length);
+		var message = lines[rand];
+		message = message.replace("${player_name}", '${player.name}');
+		message = message.replace("${player_name_uppercase}", '${player.name.toUpperCase()}');
+		message = message.replace("${reset}", '${Colors.RESET}');
+		message = message.replace("${yellow}", '${Colors.YELLOW}');
+		
+		log(message);
+		
+		// switch (rand) {
+		// 	case 0:
+		// 		logln('Hi, ${Colors.YELLOW}${name}${Colors.RESET}!');
+		// 	case 1:
+		// 		logln('Sup, ${Colors.YELLOW}${name}${Colors.RESET}!');
+		// 	case 2:
+		// 		logln('Yooooo, it\'s ${Colors.YELLOW}${name}${Colors.RESET}!');
+		// 	case 3:
+		// 		logln('${Colors.YELLOW}${name}${Colors.RESET} has joined the chat');
+		// 	case 4:
+		// 		logln('Meet the ${Colors.YELLOW}${name.toUpperCase()}${Colors.RESET}');
+		// 		if (name.toUpperCase() == "MEDIC") {
+		// 			logln("Dun, dun, du-duuuun!");
+		// 		}
+		// }
 
 		write('\n');
 		loop();
@@ -150,6 +176,10 @@ class Main {
 						player.invent.splice(input_n - 1, 1);
 					}
 				}
+			
+			case "reload":
+				loadAssets();
+				logln("Reloaded assets");
 		}
 
 		loop();
@@ -157,8 +187,14 @@ class Main {
 	
 	// //////////////
 
+	static public function loadAssets () {
+		final file = File.getContent("assets/prefix.txt");
+		prefix = file;
+	}
+
 	static public function main () {
-		prefix = "> ";
+		loadAssets();
+
 		new Main();
 	}
 }

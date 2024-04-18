@@ -1,0 +1,5 @@
+Hi, ${yellow}${player_name}${reset}!
+Sup, ${yellow}${player_name}${reset}!
+Yooooo, it's ${yellow}${player_name}${reset}!
+${yellow}${player_name}${reset} has joined the chat
+Meet the ${yellow}${player_name_uppercase}${reset}
