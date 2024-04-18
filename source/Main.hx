@@ -67,9 +67,9 @@ class Main {
 	static public function loop () {
 		log("");
 		var input = Sys.stdin().readLine();
-		var input_lc = input.toLowerCase();
+		var cmd = CommandInput.parseFromString(input);
 
-		switch (input_lc) {
+		switch (cmd.name.toLowerCase()) {
 			case "quit":
 				logln("Are you sure? (Y/n)");
 				log("");
@@ -103,7 +103,7 @@ class Main {
 				logln("///////////////////");
 				logln('Name: ${Colors.YELLOW}${player.name}${Colors.RESET}');
 				logln(healthStr);
-				logln('Inventory: ${player.invent.length}/${player.inventSize} items');
+				logln('Inventory: ${Colors.BLUE}${player.invent.length}/${player.inventSize}${Colors.RESET} items');
 				logln("///////////////////");
 			
 			case "invent":
@@ -118,15 +118,28 @@ class Main {
 				logln("///////////////////");
 			
 			case "use":
-				logln("Type in the index of the item in your inventory");
-				logln("(q or c to cancel)");
-				log("");
+				if (cmd.args[0] == null) {
+					logln("Type in the index of the item in your inventory");
+					logln("(q or c to cancel)");
+					log("");
 
-				var input = Sys.stdin().readLine();
-				var input_lc = input.toLowerCase();
+					var input = Sys.stdin().readLine();
+					var input_lc = input.toLowerCase();
 
-				if (input_lc != "q" && input_lc != "c") {
-					var input_n = Std.parseInt(input);
+					if (input_lc != "q" && input_lc != "c") {
+						var input_n = Std.parseInt(input);
+
+						if (input_n < 1 || input_n > player.inventSize) {
+							logln('Index out of bounds! Only 1-${player.inventSize}');
+						} else if (player.invent[input_n - 1] == null) {
+							logln('The slot at index ${input_n} is empty');
+						} else {
+							player.invent[input_n - 1].use(player);
+							player.invent.splice(input_n - 1, 1);
+						}
+					}
+				} else {
+					var input_n = Std.parseInt(cmd.args[0]);
 
 					if (input_n < 1 || input_n > player.inventSize) {
 						logln('Index out of bounds! Only 1-${player.inventSize}');
