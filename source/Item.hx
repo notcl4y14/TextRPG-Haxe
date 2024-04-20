@@ -11,7 +11,7 @@ class Item {
 
 	// //////////////
 
-	public function use (user: Entity) {
+	public function use (user: Entity, target: Any) {
 		Sys.println('WARNING: Item ID "${name}"\'s use() method is unitialized');
 	}
 }

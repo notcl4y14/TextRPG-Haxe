@@ -1,0 +1,1 @@
+${health_color}${player_health}/${player_healthMax}${reset} > 

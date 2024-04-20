@@ -7,13 +7,14 @@ class Apple extends Item {
 
 	// //////////////
 
-	override public function use (user: Entity) {
-		user.heal(5);
+	override public function use (user: Entity, target: Any) {
+		var target: Entity = cast (target, Entity);
+		target.heal(5);
 
 		var bonus = Math.floor(Math.random() * 11);
 
 		if (bonus == 1) {
-			user.heal(10);
+			target.heal(10);
 		}
 	}
 }

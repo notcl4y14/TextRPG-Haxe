@@ -7,13 +7,14 @@ class HurtPotion extends Item {
 
 	// //////////////
 
-	override public function use (user: Entity) {
-		user.heal(-15);
+	override public function use (user: Entity, target: Any) {
+		var target: Entity = cast (target, Entity);
+		target.heal(-15);
 
 		var bonus = Math.floor(Math.random() * 5);
 
 		if (bonus == 1) {
-			user.heal(-10);
+			target.heal(-10);
 		}
 	}
 }
