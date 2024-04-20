@@ -152,6 +152,24 @@ class Main {
 
 	static public function loadCommands () {
 		commands = [];
+		
+		commands.push( new Command ("help", ["commands"], (user: Entity, args: Array<String>) -> {
+			var str1: String = '\tText RPG\n\tMade by notcl4y14\n\thttps://github.com/notcl4y14/TextRPG\n\tMade in Haxe: https://haxe.org/\n';
+			var str2: String = '\tCommands:\n\thelp (commands) - Shows this list\n\tquit (q) - Quits the game (requires confirmation)\n\tstats - Shows player\'s stats\n\tinventory (inv, invent, items, backpack) - Shows a list of items the player has\n\tuse (item) [index] - Uses an item at a given index in the inventory\n\treload - Reloads the assets';
+
+			var spaces: String = "";
+			for ( char in prefix.split("") ) {
+				if (char == " ") {
+					spaces += char;
+				}
+			}
+
+			str1 = str1.replace('\t', spaces);
+			str2 = str2.replace('\t', spaces);
+			
+			logln(str1);
+			logln(str2);
+		}) );
 
 		commands.push( new Command ("quit", ["q"], (user: Entity, args: Array<String>) -> {
 			logln("Are you sure? (Y/n)");
