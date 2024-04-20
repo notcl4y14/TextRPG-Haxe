@@ -7,14 +7,18 @@ class Entity {
 	public var invent: Array<Item>;
 	public var inventSize: Int;
 
+	public var gameParent: Game;
+
 	// //////////////
 
-	public function new (name: String, health: Float, healthMax: Float, inventSize: Int) {
+	public function new (name: String, health: Float, healthMax: Float, inventSize: Int, gameParent: Game) {
 		this.name = name;
 		this.health = health;
 		this.healthMax = healthMax;
 		this.invent = [];
 		this.inventSize = inventSize;
+
+		this.gameParent = gameParent;
 	}
 
 	// //////////////
@@ -24,9 +28,9 @@ class Entity {
 
 		if (!quiet) {
 			if (v < 0) {
-				Main.logln('${name} ${v}HP');
+				gameParent.logln('${name} ${v}HP');
 			} else {
-				Main.logln('${name} +${v}HP!');
+				gameParent.logln('${name} +${v}HP!');
 			}
 		}
 		
@@ -37,7 +41,7 @@ class Entity {
 	public function pickup (item: Item, quiet: Bool = false) {
 		if (this.invent.length > this.inventSize) {
 			if (!quiet) {
-				Main.logln('Inventory full!');
+				gameParent.logln('Inventory full!');
 			}
 			
 			return;
@@ -46,7 +50,7 @@ class Entity {
 		this.invent.push(item);
 
 		if (!quiet) {
-			Main.logln('You picked ${item.name} up');
+			gameParent.logln('You picked ${item.name} up');
 		}
 	}
 }
