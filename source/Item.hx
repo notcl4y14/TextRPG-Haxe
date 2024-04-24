@@ -4,9 +4,13 @@ class Item {
 	public var name: String;
 	public var info: String;
 
-	public function new (name: String, info: String) {
+	public var consumable: Bool;
+
+	public function new (name: String, info: String, consumable: Bool) {
 		this.name = name;
 		this.info = info;
+		
+		this.consumable = consumable;
 	}
 
 	// //////////////

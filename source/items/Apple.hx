@@ -2,7 +2,7 @@ package source.items;
 
 class Apple extends Item {
 	public function new () {
-		super("Apple", "Heals +5HP; 1/10 chance to get +10HP bonus");
+		super("Apple", "Heals +5HP; 1/10 chance to get +10HP bonus", true);
 	}
 
 	// //////////////

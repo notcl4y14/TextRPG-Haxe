@@ -9,7 +9,10 @@ class Game {
 	public var prefix: String;
 	public var prefixInput: String;
 	public var player: Entity;
+	public var enemies: Array<Entity> = [];
 	public var commands: Array<Command>;
+
+	public var lastInput: String;
 
 	// //////////////
 
@@ -47,6 +50,7 @@ class Game {
 		
 		write(prefixInput);
 		var input = Sys.stdin().readLine();
+
 		return input;
 	}
 
@@ -136,6 +140,7 @@ class Game {
 		commands.push( new Command ("use", ["item"], (user: Entity, args: Array<String>) -> {
 			var input_n: Int = null;
 
+			// No args
 			if (args[0] == null) {
 				logln("Type in the index of the item in your inventory");
 				logln("(q or c to cancel)");
@@ -148,23 +153,72 @@ class Game {
 					input_n = Std.parseInt(input);
 				}
 			}
+			
+			// First item with a given name
+			else if (args[0] is String) {
 
+				for ( i in 0...player.invent.length ) {
+
+					var item = player.invent[i];
+
+					if (item.name.toLowerCase() == args[0].toLowerCase()) {
+						input_n = i + 1;
+					}
+
+				}
+
+			}
+
+			// Default
 			if (input_n == null) {
 				input_n = Std.parseInt(args[0]);
 			}
 
 			var index = input_n - 1;
+			var item = player.invent[index];
+			var targetIndex: Int = Std.parseInt(args[1]) - 1;
+			var target: Entity = args[1] == null ? player : enemies[targetIndex];
+
+			if (target == null) {
+				logln('Unknown target at index ${targetIndex + 1}');
+				return;
+			}
 
 			if (input_n < 1 || input_n > player.inventSize) {
 				logln('Index out of bounds! Only 1-${player.inventSize}');
 				return;
-			} else if (player.invent[index] == null) {
+			} else if (item == null) {
 				logln('The slot at index ${input_n} is empty');
 				return;
 			}
 
-			player.invent[index].use(player, player);
-			player.invent.splice(index, 1);
+			item.use(player, target);
+
+			if (item.consumable) {
+				player.invent.splice(index, 1);
+			}
+		}) );
+
+		commands.push( new Command ("enemies", [], (user: Entity, args: Array<String>) -> {
+
+			for ( i in 0...enemies.length ) {
+				
+				var enemy = enemies[i];
+				logln('${i + 1}. ${enemy.name}: ${enemy.health}/${enemy.healthMax} - ${enemy.healthPercent}%');
+
+			}
+
+		}) );
+
+		commands.push( new Command ("last", ["l"], (user: Entity, args: Array<String>) -> {
+			if (lastInput == null) return;
+			var cmd = CommandInput.parseFromString(lastInput);
+			
+			for ( batch in commands ) {
+				if ( batch.matches( cmd.name.toLowerCase() ) ) {
+					batch.action (player, cmd.args);
+				}
+			}
 		}) );
 
 		commands.push( new Command ("reload", [], (user: Entity, args: Array<String>) -> {
@@ -232,6 +286,10 @@ class Game {
 		player.pickup(new HurtPotion(), true);
 		player.pickup(new HurtPotion(), true);
 		player.pickup(new HurtPotion(), true);
+		player.pickup(new Sword(), true);
+
+		enemies.push( new Entity("Enemy", 125, 125, 10, this) );
+		enemies[0].destroyWhenDead = true;
 
 		var messages = File.getContent("assets/welcomeMessages.txt");
 		var lines: Array<String> = [];
@@ -268,6 +326,9 @@ class Game {
 				batch.action (player, cmd.args);
 			}
 		}
+
+		if (cmd.name != "last")
+			lastInput = input;
 
 		loop();
 	}

@@ -2,7 +2,7 @@ package source.items;
 
 class HurtPotion extends Item {
 	public function new () {
-		super("HurtPotion", "Hurts -15HP; 1/4 chance bonus -10HP");
+		super("HurtPotion", "Hurts -15HP; 1/4 chance bonus -10HP", true);
 	}
 
 	// //////////////
