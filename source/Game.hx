@@ -149,9 +149,11 @@ class Game {
 				var input = Sys.stdin().readLine();
 				var input_lc = input.toLowerCase();
 
-				if (input_lc != "q" && input_lc != "c") {
-					input_n = Std.parseInt(input);
+				if (input_lc == "q" || input_lc == "c") {
+					return;
 				}
+				
+				input_n = Std.parseInt(input);
 			}
 			
 			// First item with a given name
@@ -174,10 +176,15 @@ class Game {
 				input_n = Std.parseInt(args[0]);
 			}
 
-			var index = input_n - 1;
-			var item = player.invent[index];
-			var targetIndex: Int = Std.parseInt(args[1]) - 1;
-			var target: Entity = args[1] == null ? player : enemies[targetIndex];
+			var index = input_n == null ? null : input_n - 1;
+			var item = index == null ? null : player.invent[index];
+			var targetIndex: Int = Std.parseInt(args[1]) == null ? null : Std.parseInt(args[1]) - 1;
+			var target: Entity = Std.parseInt(args[1]) == null ? player : enemies[targetIndex];
+
+			if (item == null) {
+				logln('Unknown item index given');
+				return;
+			}
 
 			if (target == null) {
 				logln('Unknown target at index ${targetIndex + 1}');
@@ -286,6 +293,7 @@ class Game {
 		player.pickup(new HurtPotion(), true);
 		player.pickup(new HurtPotion(), true);
 		player.pickup(new HurtPotion(), true);
+		player.pickup(new HealthPotion(), true);
 		player.pickup(new Sword(), true);
 
 		enemies.push( new Entity("Enemy", 125, 125, 10, this) );

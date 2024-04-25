@@ -42,7 +42,7 @@ class Entity {
 
 	// //////////////
 
-	public function heal (v: Float, quiet: Bool = false) {
+	public function heal (v: Float, overheal: Bool = false, quiet: Bool = false) {
 		this.health += v;
 
 		if (!quiet) {
@@ -69,9 +69,16 @@ class Entity {
 		}
 
 		else if (this.health > this.healthMax) {
-			this.health = this.healthMax;
+			if (!overheal) {
+				this.health = this.healthMax;
+			}
+
 			if (!quiet) {
-				gameParent.logln('${name} Max HP!');
+				if (this.health == this.healthMax) {
+					gameParent.logln('${name} Max HP!');
+				} else {
+					gameParent.logln('${name} Overheal!');
+				}
 			}
 		}
 	}
