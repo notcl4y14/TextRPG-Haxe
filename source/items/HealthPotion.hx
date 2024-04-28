@@ -7,14 +7,14 @@ class HealthPotion extends Item {
 
 	// //////////////
 
-	override public function use (user: Entity, target: Any) {
+	override public function use (user: Entity, target: Any, quiet: Bool = false) {
 		var target: Entity = cast (target, Entity);
-		target.heal(10, true);
+		target.heal(10, true, quiet);
 
 		var bonus = Math.floor(Math.random() * 3);
 
 		if (bonus == 1) {
-			target.heal(10, true);
+			target.heal(10, true, quiet);
 		}
 	}
 }

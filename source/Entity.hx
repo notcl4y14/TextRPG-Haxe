@@ -42,6 +42,11 @@ class Entity {
 
 	// //////////////
 
+	public function attack (target: Entity, item: Item) {
+		gameParent.logln('${this.name} attacks ${target.name} with ${item}!');
+		item.use(this, target);
+	}
+
 	public function heal (v: Float, overheal: Bool = false, quiet: Bool = false) {
 		this.health += v;
 
@@ -95,7 +100,7 @@ class Entity {
 		this.invent.push(item);
 
 		if (!quiet) {
-			gameParent.logln('You picked ${item.name} up');
+			gameParent.logln('${this.name} picked ${item.name} up');
 		}
 	}
 }

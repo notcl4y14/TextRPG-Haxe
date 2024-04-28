@@ -1,5 +1,6 @@
 package source;
 
+import source.entities.Skeleton;
 import source.items.*;
 import sys.io.File;
 
@@ -12,6 +13,7 @@ class Game {
 	public var enemies: Array<Entity> = [];
 	public var commands: Array<Command>;
 
+	public var enemyTurn: Bool = false;
 	public var lastInput: String;
 
 	// //////////////
@@ -201,6 +203,10 @@ class Game {
 
 			item.use(player, target);
 
+			if (item.turnChanging) {
+				enemyTurn = true;
+			}
+
 			if (item.consumable) {
 				player.invent.splice(index, 1);
 			}
@@ -296,8 +302,8 @@ class Game {
 		player.pickup(new HealthPotion(), true);
 		player.pickup(new Sword(), true);
 
-		enemies.push( new Entity("Enemy", 125, 125, 10, this) );
-		enemies[0].destroyWhenDead = true;
+		enemies.push( new Skeleton(this) );
+		enemies[0].pickup( new Sword() );
 
 		var messages = File.getContent("assets/welcomeMessages.txt");
 		var lines: Array<String> = [];
@@ -326,6 +332,16 @@ class Game {
 	// //////////////
 	
 	public function loop () {
+		if (enemyTurn) {
+			for ( enemy in enemies ) {
+				// logln('${enemy.name}: Deals 5 damage to ${player.name}!');
+				// player.heal(-5, false, true);
+				enemy.invent[0].use(enemy, player);
+			}
+
+			enemyTurn = false;
+		}
+
 		var input = input();
 		var cmd = CommandInput.parseFromString(input);
 
@@ -338,6 +354,7 @@ class Game {
 		if (cmd.name != "last")
 			lastInput = input;
 
+		// var thr = new sys.thread.Thread(loop);
 		loop();
 	}
 }
